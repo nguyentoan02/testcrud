@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 //haah
+//ok
 const itemSchema = new mongoose.Schema({
     name: String,
     quantity: Number
