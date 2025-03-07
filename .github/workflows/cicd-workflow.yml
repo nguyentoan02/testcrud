@@ -22,7 +22,7 @@ jobs:
 
   deploy:
     needs: build
-    runs-on: [self-hosted, Linux, X64, aws-ec2]
+    runs-on: [self-hosted, Linux, X64]
     steps:
       - name: Pull image from Docker Hub
         run: docker pull ${{ secrets.DOCKER_USERNAME }}/testcrud:latest
