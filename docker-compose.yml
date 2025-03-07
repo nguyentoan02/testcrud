@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    ports:
+      - "8080:3000" # Cố định cổng trên máy host
+    depends_on:
+      - mongo
+    env_file:
+      - .env
+    restart: always
+    networks:
+      - my_network
+
+  mongo:
+    image: mongo:6.0
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    restart: always
+    networks:
+      - my_network
+
+volumes:
+  mongo_data:
+
+networks:
+  my_network:
+    driver: bridge
