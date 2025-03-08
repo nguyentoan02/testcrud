@@ -24,24 +24,23 @@ jobs:
     needs: build
     runs-on: [self-hosted, Linux, X64]
     steps:
-      - name: Ensure Docker is running
+      - name: Ensure Docker & Docker Compose are installed
         run: |
+          sudo apt update
+          sudo apt install -y docker.io docker-compose
           sudo systemctl start docker
           sudo systemctl enable docker
 
-      - name: Add user to Docker group (if needed)
-        run: sudo usermod -aG docker $(whoami)
-
-      - name: Pull image from Docker Hub
+      - name: Pull latest Docker image
         run: sudo docker pull ${{ secrets.DOCKER_USERNAME }}/testcrud:latest
 
-      - name: Stop and remove old container
-        run: sudo docker rm -f testcrud-container || true
+      - name: Stop and remove old containers
+        run: sudo docker-compose down || true
 
-      - name: Create .env file
+      - name: Create `.env` file
         run: |
           echo "MONGO_URI=${{ secrets.MONGO_URI }}" > .env
-          echo "PORT=${{ secrets.PORT }}" >> .env
+          echo "PORT=3000" >> .env
 
-      - name: Run Docker container
-        run: sudo docker run -d --name testcrud-container -p 8080:3000 --env-file .env ${{ secrets.DOCKER_USERNAME }}/testcrud:latest
+      - name: Start services with Docker Compose
+        run: sudo docker-compose up -d --force-recreate
