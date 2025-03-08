@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
   app:
-    build: .
+    image: ${{ secrets.DOCKER_USERNAME }}/testcrud:latest
     ports:
-      - "8080:3000" # Cố định cổng trên máy host
+      - "8080:3000"
     depends_on:
       - mongo
     env_file:
